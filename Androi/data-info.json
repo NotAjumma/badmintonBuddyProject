@@ -1,0 +1,22 @@
+{
+  "facility": [
+    {
+      "image": "one.jpg",
+      "facilityName": "Arena Badminton EC",
+      "area": "Batu Gajah Perdana",
+      "price": 25
+    },
+    {
+      "image": "two.jpg",
+      "facilityName": "GMB Badminton Court",
+      "area": "Melembu",
+      "price": 40
+    },
+    {
+      "image": "three.jpg",
+      "facilityName": "Dewan Badminton Lahat",
+      "area": "Lahat",
+      "price": 68
+    }
+  ]
+}

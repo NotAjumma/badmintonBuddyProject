@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "897126403827",
+    "firebase_url": "https://badmintonbuddy-bd5ca-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "badmintonbuddy-bd5ca",
+    "storage_bucket": "badmintonbuddy-bd5ca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:897126403827:android:718fe6974f7052d508f186",
+        "android_client_info": {
+          "package_name": "com.example.testingdb"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjSzGENbgsP3b7IN30RFpMdwC_iInbMfU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

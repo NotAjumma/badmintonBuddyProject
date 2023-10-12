@@ -1,0 +1,4 @@
+#Tue Oct 10 10:22:51 SGT 2023
+base.0=D\:\\BadmintonBuddy\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
