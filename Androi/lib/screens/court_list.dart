@@ -4,8 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CourtList extends StatelessWidget {
-  final Map<String, dynamic> book;
-  const CourtList({Key? key, required this.book}) : super(key: key);
+  final Map<String, dynamic> court;
+  final String price; // Add a price property
+  const CourtList({Key? key, required this.court, required this.price}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,53 +33,49 @@ class CourtList extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          book['left']['date'],
+                          court['name'],
                           style: Styles.headLineStyle3
                               .copyWith(color: Colors.white),
                         ),
-                        Text(
-                          book['area'],
-                          style: Styles.headLineStyle3
-                              .copyWith(color: Colors.white),
-                        ),
-                        Text(
-                          book['right']['totalCourt'],
-                          style: Styles.headLineStyle3
-                              .copyWith(color: Colors.white),
-                        ),
+                        // Text(
+                        //   court['price'],
+                        //   style: Styles.headLineStyle3
+                        //       .copyWith(color: Colors.white),
+                        // ),
+
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: 100,
-                          child: Text(
-                            'Date',
-                            style: Styles.headLineStyle4
-                                .copyWith(color: Colors.white),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 100,
-                          child: Center(
-                            child: Text(
-                              book['facilityName'],
-                              style: Styles.headLineStyle5.copyWith(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 100,
-                          child: Text(
-                            'Total',
-                            textAlign: TextAlign.end,
-                            style: Styles.headLineStyle4
-                                .copyWith(color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    )
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     SizedBox(
+                    //       width: 100,
+                    //       child: Text(
+                    //         'Date',
+                    //         style: Styles.headLineStyle4
+                    //             .copyWith(color: Colors.white),
+                    //       ),
+                    //     ),
+                    //     SizedBox(
+                    //       width: 100,
+                    //       child: Center(
+                    //         child: Text(
+                    //           court['facilityName'],
+                    //           style: Styles.headLineStyle5.copyWith(color: Colors.white),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     SizedBox(
+                    //       width: 100,
+                    //       child: Text(
+                    //         'Total',
+                    //         textAlign: TextAlign.end,
+                    //         style: Styles.headLineStyle4
+                    //             .copyWith(color: Colors.white),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // )
                   ],
                 )),
             Container(
@@ -99,42 +96,41 @@ class CourtList extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            book['startTime'],
-                            style: Styles.headLineStyle3
-                                .copyWith(color: Colors.white),
-                          ),
-                          Text(
-                            "Start",
-                            style: Styles.headLineStyle4
-                                .copyWith(color: Colors.white),
-                          ),
+                            '\RM$price/hour',
+                            style: Styles.headLineStyle2.copyWith(color:Colors.white),
+                          )
+                          // Text(
+                          //   "Start",
+                          //   style: Styles.headLineStyle4
+                          //       .copyWith(color: Colors.white),
+                          // ),
                         ],
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            book['duration'],
-                            style: Styles.headLineStyle3
-                                .copyWith(color: Colors.white),
-                          ),
-                          Text(
-                            "",
-                            style: Styles.headLineStyle4
-                                .copyWith(color: Colors.white),
-                          ),
-                        ],
-                      ),
+                      // Column(
+                      //   crossAxisAlignment: CrossAxisAlignment.start,
+                      //   children: [
+                      //     Text(
+                      //       court['duration'],
+                      //       style: Styles.headLineStyle3
+                      //           .copyWith(color: Colors.white),
+                      //     ),
+                      //     // Text(
+                      //     //   "",
+                      //     //   style: Styles.headLineStyle4
+                      //     //       .copyWith(color: Colors.white),
+                      //     // ),
+                      //   ],
+                      // ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
+                          // Text(
+                          //   court['endTime'],
+                          //   style: Styles.headLineStyle3
+                          //       .copyWith(color: Colors.white),
+                          // ),
                           Text(
-                            book['endTime'],
-                            style: Styles.headLineStyle3
-                                .copyWith(color: Colors.white),
-                          ),
-                          Text(
-                            "End",
+                            "Add to cart",
                             style: Styles.headLineStyle4
                                 .copyWith(color: Colors.white),
                           ),

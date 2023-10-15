@@ -28,7 +28,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   DateTime? _selectedDate;
   List<Map<String, dynamic>> badmintonFacilityList = [];
-  List<Map<String, dynamic>> filteredFacilityList = [];
   bool isSearching = false;
 
   @override
@@ -87,14 +86,16 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     try {
-      final response = await http.get(Uri.parse('http://192.168.137.1/BadmintonBuddyServerSide/search_facility.php?query=${searchController.text}'));
+      final response = await http.get(Uri.parse(
+          'http://192.168.137.1/BadmintonBuddyServerSide/search_facility.php?query=${searchController.text}'));
 
       print('Response status code: ${response.statusCode}');
       print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonResponse = json.decode(response.body);
-        final List<Map<String, dynamic>> searchResults = jsonResponse.cast<Map<String, dynamic>>();
+        final List<Map<String, dynamic>> searchResults =
+        jsonResponse.cast<Map<String, dynamic>>();
 
         // Pass the search query along with the results to SearchResultScreen
         Navigator.of(context).push(
@@ -121,13 +122,11 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Styles.bgColor,
-      body: ListView(
+      body: Column(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -177,15 +176,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Color(0xFF3b3b3b),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: AppLayout
-                            .getWidth(10),),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppLayout.getWidth(10),
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-
                             SizedBox(
-                              width: AppLayout.getWidth(
-                                  250), // Adjust the width as needed
+                              width: AppLayout.getWidth(250),
                               child: TextFormField(
                                 decoration: const InputDecoration(
                                   hintText: "Where are you looking to play?",
@@ -193,14 +191,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 style: Styles.textStyle,
                                 controller: searchController,
-                                // Use the TextEditingController
-                                onChanged: (query) {
-                                  setState(() {
-                                    // Update the UI with filtered results based on user input.
-                                    // badmintonFacilityList =
-                                    //     filterFacilities(query);
-                                  });
-                                },
+                                // onChanged: (query) {
+                                //   setState(() {
+                                //     badmintonFacilityList =
+                                //         filterFacilities(query);
+                                //   });
+                                // },
                               ),
                             ),
                           ],
@@ -209,68 +205,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-
                 Gap(AppLayout.getHeight(10)),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: const Color(0xFFF4F6FD),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.calendar_today,
-                        color: Color(0xFF3b3b3b),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: AppLayout.getWidth(10),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(
-                                  14.0),
-                              // You can adjust the padding values as needed
-                              child: GestureDetector(
-                                onTap: () => _selectDate(context),
-                                child: SizedBox(
-                                  width: AppLayout.getWidth(250),
-                                  child: Text(
-                                    _selectedDate == null
-                                        ? "Select a date"
-                                        : DateFormat('yyyy-MM-dd')
-                                        .format(_selectedDate!),
-                                    style: Styles.textStyle,
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
 
-                Gap(AppLayout.getHeight(10)),
-                const AppIconText(
-                    icon: Icons.timer_rounded,
-                    subLabel: "Time",
-                    label: "Select a time"),
-                Gap(AppLayout.getHeight(15)),
                 GestureDetector(
-                  onTap: handleFindCourtsButtonClick, // Handle button click
+                  onTap: handleFindCourtsButtonClick,
                   child: Container(
                     padding: EdgeInsets.symmetric(
                         vertical: AppLayout.getWidth(15),
                         horizontal: AppLayout.getWidth(15)),
                     decoration: BoxDecoration(
                       color: const Color(0xD91130CE),
-                      borderRadius: BorderRadius.circular(
-                          AppLayout.getWidth(10)),
+                      borderRadius:
+                      BorderRadius.circular(AppLayout.getWidth(10)),
                     ),
                     child: Center(
                       child: Text(
@@ -289,16 +235,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: Styles.headLineStyle2,
                     ),
                     InkWell(
-                        onTap: () {
-                          print("You are tapped");
-                        },
-                        child: Text(
-                          "View all",
-                          style: Styles.textStyle
-                              .copyWith(color: Styles.primaryColor),
-                        ))
+                      onTap: () {
+                        print("You are tapped");
+                      },
+                      child: Text(
+                        "View all",
+                        style: Styles.textStyle
+                            .copyWith(color: Styles.primaryColor),
+                      ),
+                    ),
                   ],
-                )
+                ),
               ],
             ),
           ),
@@ -314,36 +261,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const Gap(15),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Badminton Facility",
-                  style: Styles.headLineStyle2,
-                ),
-                InkWell(
-                    onTap: () {
-                      print("You are tapped");
-                    },
-                    child: Text(
-                      "View all",
-                      style: Styles.textStyle
-                          .copyWith(color: Styles.primaryColor),
-                    ))
-              ],
-            ),
-          ),
-          const Gap(15),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.only(left: 20),
-            child: Row(
-              children: badmintonFacilityList
-                  .map((singleFacility) =>
-                  BadmintonFacilityScreen(badmintonFacility: singleFacility))
-                  .toList(),
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.only(left: 20),
+              child: Row(
+                children: badmintonFacilityList
+                    .map((singleFacility) =>
+                    BadmintonFacilityScreen(badmintonFacility: singleFacility))
+                    .toList(),
+              ),
             ),
           ),
           const Gap(15),

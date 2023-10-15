@@ -1,7 +1,11 @@
 <?php
+header("Access-Control-Allow-Origin: *"); // Replace * with your Flutter app's IP address or domain.
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Origin, Content-Type, Accept");
+
 include 'db_connect.php';
 
-$sql = "SELECT * FROM badmintonfacility";
+$sql = "SELECT * FROM badmintonFacility";
 $result = $conn->query($sql);
 
 $data = array();

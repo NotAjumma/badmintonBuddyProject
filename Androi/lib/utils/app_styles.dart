@@ -3,6 +3,8 @@ Color primary = const Color(0xFF1b95d6);
 class Styles{
   static Color primaryColor = primary;
   static Color textColor = const Color(0xFF3b3b3b);
+  static Color boxGrey = const Color(0xFFe8e8e8);
+  static Color secPrimaryColor = const Color(0xD91130CE);
   static Color bgColor = const Color(0xFFeeedf2);
   static Color orangeColor = const Color(0xFFF37B67);
   static Color kakiColor = const Color(0xFFd1ca98);

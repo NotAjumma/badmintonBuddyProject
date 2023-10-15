@@ -19,6 +19,21 @@ List<Map<String, dynamic>> badmintonFacilityList = [
   },
 ];
 
+List<Map<String, dynamic>> courtList = [
+  {
+    'name': 'Badminton Court 1',
+    'price': 25
+  },
+  {
+    'name': 'Badminton Court 2',
+    'price': 25
+  },
+  {
+    'name': 'Badminton Court 3',
+    'price': 25
+  },
+];
+
 List<Map<String, dynamic>> bookList = [
   {
     'left': {
