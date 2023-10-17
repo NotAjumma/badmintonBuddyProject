@@ -2,21 +2,24 @@ import 'dart:convert';
 
 import 'package:badmintonbuddy/screens/badminton_facility_vertical_screen.dart';
 import 'package:badmintonbuddy/screens/badmiton_facility_screen.dart';
+import 'package:badmintonbuddy/screens/bottom_bar.dart';
 import 'package:badmintonbuddy/screens/court_list.dart';
 import 'package:badmintonbuddy/utils/app_info_list.dart';
 import 'package:badmintonbuddy/utils/app_layout.dart';
 import 'package:badmintonbuddy/utils/app_styles.dart';
+import 'package:badmintonbuddy/widgets/cart_items_notifier.dart';
 import 'package:badmintonbuddy/widgets/icon_text_widget.dart';
 import 'package:badmintonbuddy/widgets/date_input.dart';
 import 'package:badmintonbuddy/data_service.dart';
+import 'package:badmintonbuddy/widgets/my_cart_view.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 final TextEditingController searchController = TextEditingController();
-
 
 class BookingCourtScreen extends StatefulWidget {
   final Map<String, dynamic> facility;
@@ -25,7 +28,6 @@ class BookingCourtScreen extends StatefulWidget {
       : super(key: key);
   @override
   _BookingCourtScreenState createState() => _BookingCourtScreenState();
-
 
   void onDateSelected(DateTime? selectedDate) {}
 }
@@ -38,12 +40,10 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
   List<Map<String, dynamic>> courtList = [];
   bool isSearching = false;
 
-
   String? selectedDate; // Variable to store the user-selected date
   String? selectedTime; // Variable to store the user-selected time
   String? selectedAMPM; // Variable to store the user-selected AM/PM
   String? selectedDuration; // Variable to store the user-selected duration
-
 
   // @override
   // void initState() {
@@ -106,8 +106,6 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
     '6'
   ];
 
-
-
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -117,7 +115,8 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
     );
 
     if (picked != null) {
-      final formattedDate = DateFormat('yyyy-MM-dd').format(picked); // Format the DateTime to 'yyyy-MM-dd'
+      final formattedDate = DateFormat('yyyy-MM-dd')
+          .format(picked); // Format the DateTime to 'yyyy-MM-dd'
       setState(() {
         _selectedDate = picked;
         selectedDate = formattedDate;
@@ -128,9 +127,8 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
     }
   }
 
-
-  void _showCustomDropdownDialog(
-      BuildContext context, List<String> items, String? initialValue, Function(String?) onSelected) {
+  void _showCustomDropdownDialog(BuildContext context, List<String> items,
+      String? initialValue, Function(String?) onSelected) {
     String? selectedValueTime = initialValue;
     showDialog(
       context: context,
@@ -159,8 +157,8 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
     );
   }
 
-  void _showCustomDropdownDialogDuration(
-      BuildContext context, List<String> items, String? initialValue, Function(String?) onSelected) {
+  void _showCustomDropdownDialogDuration(BuildContext context,
+      List<String> items, String? initialValue, Function(String?) onSelected) {
     String? selectedValueDuration = initialValue;
     showDialog(
       context: context,
@@ -189,9 +187,8 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
     );
   }
 
-
-  void _showCustomDropdownDialogAmPm(
-      BuildContext context, List<String> items, String? initialValue, Function(String?) onSelected) {
+  void _showCustomDropdownDialogAmPm(BuildContext context, List<String> items,
+      String? initialValue, Function(String?) onSelected) {
     String? _selectedAMPM = initialValue;
     showDialog(
       context: context,
@@ -226,18 +223,18 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
         selectedAMPM == null ||
         selectedDuration == null) {
       // Handle the case where not all input values are selected.
-      print('Inside null, Date, Time, Am, Duration: $selectedDate, $selectedTime, $selectedAMPM, $selectedDuration');
+      print(
+          'Inside null, Date, Time, Am, Duration: $selectedDate, $selectedTime, $selectedAMPM, $selectedDuration');
       return;
     }
-
-
 
     setState(() {
       isSearching = true;
     });
 
     try {
-      print('inside try null, Date, Time, Am, Duration: $selectedDate, $selectedTime, $selectedAMPM, $selectedDuration');
+      print(
+          'inside try null, Date, Time, Am, Duration: $selectedDate, $selectedTime, $selectedAMPM, $selectedDuration');
       final facilityId = widget.facility['id'];
       final url =
           'http://192.168.137.1/BadmintonBuddyServerSide/get_available_courts.php?facility_id=$facilityId&date=$selectedDate&time=$selectedTime&ampm=$selectedAMPM&duration=$selectedDuration';
@@ -247,12 +244,11 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
       print('Response body: ${response.body}');
       print('Facility current id: $facilityId');
 
-
       if (response.statusCode == 200) {
         final List<dynamic> jsonResponse = json.decode(response.body);
         if (jsonResponse != null) {
           final List<Map<String, dynamic>> searchResults =
-          jsonResponse.cast<Map<String, dynamic>>();
+              jsonResponse.cast<Map<String, dynamic>>();
 
           setState(() {
             courtList = searchResults;
@@ -263,15 +259,18 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
       } else {
         print('API request failed with status code ${response.statusCode}');
       }
-
-
     } catch (error) {
       print('Error searching for facilities: $error');
     }
   }
 
-
-
+  void goBack(BuildContext context) {
+    final cartItemsNotifier =
+        Provider.of<CartItemsNotifier>(context, listen: false);
+    cartItemsNotifier.clearCart();
+    Navigator.pop(
+        context); // Use Navigator.pop to go back to the previous screen
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -286,18 +285,18 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
           icon: const Icon(Icons.close),
           color: const Color(0xFF3b3b3b),
           onPressed: () {
-            Navigator.of(context).pop();
+            goBack(context);
           },
         ),
       ),
       backgroundColor: Styles.bgColor,
       body: ListView(
         children: [
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppLayout.getWidth(20),
-            ),
-          ),
+          // Padding(
+          //   padding: EdgeInsets.symmetric(
+          //     horizontal: AppLayout.getWidth(20),
+          //   ),
+          // ),
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: AppLayout.getWidth(20),
@@ -331,7 +330,8 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
                               child: Text(
                                 _selectedDate == null
                                     ? "Date"
-                                    : DateFormat('yyyy-MM-dd').format(_selectedDate!),
+                                    : DateFormat('yyyy-MM-dd')
+                                        .format(_selectedDate!),
                                 style: Styles.textStyle,
                               ),
                             ),
@@ -344,14 +344,14 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
               ),
             ),
           ),
+          // Padding(
+          //   padding: EdgeInsets.symmetric(
+          //     horizontal: AppLayout.getWidth(10),
+          //   ),
+          // ),
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: AppLayout.getWidth(10),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppLayout.getWidth(10),
+              horizontal: AppLayout.getWidth(20),
             ),
             child: Row(
               children: [
@@ -361,7 +361,8 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
                     child: GestureDetector(
                       onTap: () {
                         _showCustomDropdownDialog(
-                            context, startTimes, _selectedStartTime, (String? value) {
+                            context, startTimes, _selectedStartTime,
+                            (String? value) {
                           setState(() {
                             _selectedStartTime = value;
                           });
@@ -374,7 +375,8 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
                         ),
                         child: InputDecorator(
                           decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 10),
                             border: InputBorder.none,
                           ),
                           child: Text(_selectedStartTime ?? "Start time"),
@@ -390,7 +392,8 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
                     child: GestureDetector(
                       onTap: () {
                         _showCustomDropdownDialogAmPm(
-                            context, AMPMOptions, _selectedAMPM, (String? value) {
+                            context, AMPMOptions, _selectedAMPM,
+                            (String? value) {
                           setState(() {
                             _selectedAMPM = value;
                           });
@@ -403,7 +406,8 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
                         ),
                         child: InputDecorator(
                           decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 10),
                             border: InputBorder.none,
                           ),
                           child: Text(_selectedAMPM ?? "AM/PM"),
@@ -419,7 +423,8 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
                     child: GestureDetector(
                       onTap: () {
                         _showCustomDropdownDialogDuration(
-                            context, durations, _selectedDuration, (String? value) {
+                            context, durations, _selectedDuration,
+                            (String? value) {
                           setState(() {
                             _selectedDuration = value;
                           });
@@ -432,7 +437,8 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
                         ),
                         child: InputDecorator(
                           decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 10),
                             border: InputBorder.none,
                           ),
                           child: Text(_selectedDuration ?? "Duration"),
@@ -444,34 +450,42 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
               ],
             ),
           ),
-
           GestureDetector(
             onTap: handleFindCourtsButtonClick,
-            child: Container(
+            child: Padding(
               padding: EdgeInsets.symmetric(
-                  vertical: AppLayout.getWidth(15),
-                  horizontal: AppLayout.getWidth(15)),
-              decoration: BoxDecoration(
-                color: const Color(0xD91130CE),
-                borderRadius:
-                BorderRadius.circular(AppLayout.getWidth(10)),
+                horizontal: AppLayout.getWidth(20),
+                vertical: AppLayout.getWidth(10),
               ),
-              child: Center(
-                child: Text(
-                  isSearching ? "Find Courts" : "Find Courts",
-                  style: Styles.textStyle.copyWith(color: Colors.white),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: AppLayout.getWidth(15),
+                  horizontal: 20, // Horizontal padding (not margin)
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xD91130CE),
+                  borderRadius: BorderRadius.circular(AppLayout.getWidth(10)),
+                ),
+                child: Center(
+                  child: Text(
+                    isSearching ? "Find Courts" : "Find Courts",
+                    style: Styles.textStyle.copyWith(color: Colors.white),
+                  ),
                 ),
               ),
             ),
           ),
+
           const SizedBox(height: 20),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 padding: const EdgeInsets.only(left: 20, bottom: 10),
                 child: Text(
                   "Select your badminton court",
-                  style: Styles.headLineStyle2.copyWith(color: Styles.textColor),
+                  style:
+                      Styles.headLineStyle2.copyWith(color: Styles.textColor),
                 ),
               ),
               // ElevatedButton(
@@ -484,27 +498,38 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
           Column(
             children: [
               Container(
-                height: MediaQuery.of(context).size.height * 0.7, // Set your desired height here
+                height: MediaQuery.of(context).size.height *
+                    0.7, // Set your desired height here
                 child: ListView(
-                  shrinkWrap: true, // Use shrinkWrap to adapt to content height
+                  shrinkWrap: true,
                   children: courtList
-                      .map((singleCourt) => CourtList(court: singleCourt, price: widget.facility['price']))
-                      .toList() ?? [],
+                          .map((singleCourt) => CourtList(
+                                court: singleCourt,
+                                price: widget.facility['price'],
+                                duration: selectedDuration ?? "Default Value",
+                                selectedDate: selectedDate ?? "Default Value",
+                                selectedTime: selectedTime ?? "Default Value",
+                                selectedAMPM: selectedAMPM ?? "Default Value",
+                              ))
+                          .toList() ??
+                      [],
                 ),
               ),
               // Add other widgets below the ListView
             ],
-          )
+          ),
 
+          MyCartButton(
+            onPressed: () {
+              // Add the action to be performed when the button is clicked
+              // For example, you can navigate to the cart screen.
+            },
+            label: "My Cart",
+          )
         ],
       ),
-
-
     );
 
     // Excluded from the padding of the ListView
-
-
   }
 }
-

@@ -220,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: Center(
                       child: Text(
-                        isSearching ? "Cancel" : "Find Courts",
+                        isSearching ? "Find Facility" : "Find Facility",
                         style: Styles.textStyle.copyWith(color: Colors.white),
                       ),
                     ),

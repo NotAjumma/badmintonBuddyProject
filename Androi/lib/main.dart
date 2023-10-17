@@ -2,9 +2,16 @@ import 'package:badmintonbuddy/screens/bottom_bar.dart';
 import 'package:badmintonbuddy/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:badmintonbuddy/widgets/cart_items_notifier.dart';
+import 'package:provider/provider.dart'; // Import the file
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => CartItemsNotifier(), // Use CartItemsNotifier
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

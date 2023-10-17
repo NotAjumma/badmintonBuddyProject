@@ -3,8 +3,10 @@ import 'package:badmintonbuddy/screens/court_list.dart';
 import 'package:badmintonbuddy/screens/facility_details.dart';
 import 'package:badmintonbuddy/utils/app_layout.dart';
 import 'package:badmintonbuddy/utils/app_styles.dart';
+import 'package:badmintonbuddy/widgets/cart_items_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
 
 // SearchResultScreen
 class SearchResultScreen extends StatelessWidget {
@@ -18,6 +20,12 @@ class SearchResultScreen extends StatelessWidget {
     required this.searchQuery, // Pass the search query
     required this.clearFilterCallback,
   }) : super(key: key);
+
+  void goBack(BuildContext context) {
+    final cartItemsNotifier = Provider.of<CartItemsNotifier>(context, listen: false);
+    cartItemsNotifier.clearCart();
+    Navigator.pop(context); // Use Navigator.pop to go back to the previous screen
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +41,7 @@ class SearchResultScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back_rounded),
           color: (Colors.white),
           onPressed: () {
-            Navigator.of(context).pop();
+            goBack(context);
           },
         ),
       ),
