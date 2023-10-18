@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:badmintonbuddy/screens/badminton_facility_vertical_screen.dart';
 import 'package:badmintonbuddy/screens/badmiton_facility_screen.dart';
 import 'package:badmintonbuddy/screens/bottom_bar.dart';
+import 'package:badmintonbuddy/screens/cart_details_screen.dart';
 import 'package:badmintonbuddy/screens/court_list.dart';
 import 'package:badmintonbuddy/utils/app_info_list.dart';
 import 'package:badmintonbuddy/utils/app_layout.dart';
@@ -45,11 +46,11 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
   String? selectedAMPM; // Variable to store the user-selected AM/PM
   String? selectedDuration; // Variable to store the user-selected duration
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   fetchBadmintonCourts();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    print(widget.facility);
+  }
 
   // Future<void> fetchBadmintonCourts() async {
   //   final facilityId = widget.facility['id']; // Replace 'facility_id' with the correct key if needed.
@@ -156,6 +157,15 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
       },
     );
   }
+
+  double calculateTotalPrice(List<CartItem> cartItems) {
+    double total = 0.0;
+    for (var item in cartItems) {
+      total += item.price;
+    }
+    return total;
+  }
+
 
   void _showCustomDropdownDialogDuration(BuildContext context,
       List<String> items, String? initialValue, Function(String?) onSelected) {
@@ -274,6 +284,8 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cartItemsNotifier = Provider.of<CartItemsNotifier>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Styles.bgColor,
@@ -290,244 +302,312 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
         ),
       ),
       backgroundColor: Styles.bgColor,
-      body: ListView(
+      body: Column(
         children: [
-          // Padding(
-          //   padding: EdgeInsets.symmetric(
-          //     horizontal: AppLayout.getWidth(20),
-          //   ),
-          // ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppLayout.getWidth(20),
-              vertical: AppLayout.getHeight(20),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: const Color(0xFFF4F6FD),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
                 children: [
-                  const Icon(
-                    Icons.calendar_today,
-                    color: Color(0xFF3b3b3b),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppLayout.getWidth(10),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(14.0),
-                          child: GestureDetector(
-                            onTap: () => _selectDate(context),
-                            child: SizedBox(
-                              width: AppLayout.getWidth(250),
+                  ListView(
+                    shrinkWrap: true,
+                    children: [
+                      // Padding(
+                      //   padding: EdgeInsets.symmetric(
+                      //     horizontal: AppLayout.getWidth(20),
+                      //   ),
+                      // ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppLayout.getWidth(20),
+                          vertical: AppLayout.getHeight(20),
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: const Color(0xFFF4F6FD),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.calendar_today,
+                                color: Color(0xFF3b3b3b),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: AppLayout.getWidth(10),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(14.0),
+                                      child: GestureDetector(
+                                        onTap: () => _selectDate(context),
+                                        child: SizedBox(
+                                          width: AppLayout.getWidth(250),
+                                          child: Text(
+                                            _selectedDate == null
+                                                ? "Date"
+                                                : DateFormat('yyyy-MM-dd')
+                                                    .format(_selectedDate!),
+                                            style: Styles.textStyle,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      // Padding(
+                      //   padding: EdgeInsets.symmetric(
+                      //     horizontal: AppLayout.getWidth(10),
+                      //   ),
+                      // ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppLayout.getWidth(20),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _showCustomDropdownDialog(
+                                        context, startTimes, _selectedStartTime,
+                                        (String? value) {
+                                      setState(() {
+                                        _selectedStartTime = value;
+                                      });
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF4F6FD),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: InputDecorator(
+                                      decoration: const InputDecoration(
+                                        contentPadding:
+                                            EdgeInsets.symmetric(horizontal: 10),
+                                        border: InputBorder.none,
+                                      ),
+                                      child: Text(_selectedStartTime ?? "Start time"),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _showCustomDropdownDialogAmPm(
+                                        context, AMPMOptions, _selectedAMPM,
+                                        (String? value) {
+                                      setState(() {
+                                        _selectedAMPM = value;
+                                      });
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF4F6FD),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: InputDecorator(
+                                      decoration: const InputDecoration(
+                                        contentPadding:
+                                            EdgeInsets.symmetric(horizontal: 10),
+                                        border: InputBorder.none,
+                                      ),
+                                      child: Text(_selectedAMPM ?? "AM/PM"),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _showCustomDropdownDialogDuration(
+                                        context, durations, _selectedDuration,
+                                        (String? value) {
+                                      setState(() {
+                                        _selectedDuration = value;
+                                      });
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF4F6FD),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: InputDecorator(
+                                      decoration: const InputDecoration(
+                                        contentPadding:
+                                            EdgeInsets.symmetric(horizontal: 10),
+                                        border: InputBorder.none,
+                                      ),
+                                      child: Text(_selectedDuration ?? "Duration"),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: handleFindCourtsButtonClick,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppLayout.getWidth(20),
+                            vertical: AppLayout.getWidth(10),
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: AppLayout.getWidth(15),
+                              horizontal: 20, // Horizontal padding (not margin)
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xD91130CE),
+                              borderRadius: BorderRadius.circular(AppLayout.getWidth(10)),
+                            ),
+                            child: Center(
                               child: Text(
-                                _selectedDate == null
-                                    ? "Date"
-                                    : DateFormat('yyyy-MM-dd')
-                                        .format(_selectedDate!),
-                                style: Styles.textStyle,
+                                isSearching ? "Find Courts" : "Find Courts",
+                                style: Styles.textStyle.copyWith(color: Colors.white),
                               ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+
+                      const SizedBox(height: 20),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(left: 20, bottom: 10),
+                            child: Text(
+                              "Select your badminton court",
+                              style:
+                                  Styles.headLineStyle2.copyWith(color: Styles.textColor),
+                            ),
+                          ),
+                          // ElevatedButton(
+                          //   onPressed: handleFindCourtsButtonClick,
+                          //   child: Text('Find Court'),
+                          // ),
+                        ],
+                      ),
+
+                      Column(
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height *
+                                0.7, // Set your desired height here
+                            child: ListView(
+                              shrinkWrap: true,
+                              children: courtList
+                                      .map((singleCourt) => CourtList(
+                                            court: singleCourt,
+                                            price: widget.facility['price'],
+                                            duration: selectedDuration ?? "Default Value",
+                                            selectedDate: selectedDate ?? "Default Value",
+                                            selectedTime: selectedTime ?? "Default Value",
+                                            selectedAMPM: selectedAMPM ?? "Default Value",
+                                          ))
+                                      .toList() ??
+                                  [],
+                            ),
+                          ),
+                          // Add other widgets below the ListView
+                        ],
+                      ),
+
+
+
+                    ],
                   ),
+
                 ],
               ),
+
             ),
           ),
-          // Padding(
-          //   padding: EdgeInsets.symmetric(
-          //     horizontal: AppLayout.getWidth(10),
-          //   ),
-          // ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppLayout.getWidth(20),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: GestureDetector(
-                      onTap: () {
-                        _showCustomDropdownDialog(
-                            context, startTimes, _selectedStartTime,
-                            (String? value) {
-                          setState(() {
-                            _selectedStartTime = value;
-                          });
-                        });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF4F6FD),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: InputDecorator(
-                          decoration: const InputDecoration(
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 10),
-                            border: InputBorder.none,
-                          ),
-                          child: Text(_selectedStartTime ?? "Start time"),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: GestureDetector(
-                      onTap: () {
-                        _showCustomDropdownDialogAmPm(
-                            context, AMPMOptions, _selectedAMPM,
-                            (String? value) {
-                          setState(() {
-                            _selectedAMPM = value;
-                          });
-                        });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF4F6FD),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: InputDecorator(
-                          decoration: const InputDecoration(
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 10),
-                            border: InputBorder.none,
-                          ),
-                          child: Text(_selectedAMPM ?? "AM/PM"),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: GestureDetector(
-                      onTap: () {
-                        _showCustomDropdownDialogDuration(
-                            context, durations, _selectedDuration,
-                            (String? value) {
-                          setState(() {
-                            _selectedDuration = value;
-                          });
-                        });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF4F6FD),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: InputDecorator(
-                          decoration: const InputDecoration(
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 10),
-                            border: InputBorder.none,
-                          ),
-                          child: Text(_selectedDuration ?? "Duration"),
-                        ),
-                      ),
-                    ),
-                  ),
+          Container(
+            padding: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white, // Customize the background color as needed
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  spreadRadius: 1,
+                  blurRadius: 2,
+                  offset: Offset(0, -2), // Adjust the shadow as needed
                 ),
               ],
             ),
-          ),
-          GestureDetector(
-            onTap: handleFindCourtsButtonClick,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppLayout.getWidth(20),
-                vertical: AppLayout.getWidth(10),
-              ),
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  vertical: AppLayout.getWidth(15),
-                  horizontal: 20, // Horizontal padding (not margin)
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("My Cart", style: Styles.headLineStyle23.copyWith(color: Styles.textColor),), // Label "My Cart"
+                    Text("Bookings | RM ${calculateTotalPrice(cartItemsNotifier.cartItems).toStringAsFixed(2)}",
+                      style: Styles.textStyle.copyWith(color: Styles.textColor),
+                    ),
+                  ],
                 ),
-                decoration: BoxDecoration(
-                  color: const Color(0xD91130CE),
-                  borderRadius: BorderRadius.circular(AppLayout.getWidth(10)),
-                ),
-                child: Center(
+                ElevatedButton(
+                  onPressed: () {
+                    print('Cart Items List in Booking Court Screen: ${cartItemsNotifier.cartItems}');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CartDetailsScreen(
+                          facility:
+                          widget.facility, cartItemsNotifier: cartItemsNotifier, ), // Assuming you have a CourtList screen
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Styles.secPrimaryColor, // Set the background color to secPrimaryColor
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppLayout.getWidth(10)),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      vertical: AppLayout.getWidth(20),
+                      horizontal: AppLayout.getWidth(25), // Horizontal padding (not margin)
+                    ),
+                  ),
                   child: Text(
-                    isSearching ? "Find Courts" : "Find Courts",
+                    "Next",
                     style: Styles.textStyle.copyWith(color: Colors.white),
                   ),
                 ),
-              ),
+
+              ],
+
             ),
           ),
-
-          const SizedBox(height: 20),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.only(left: 20, bottom: 10),
-                child: Text(
-                  "Select your badminton court",
-                  style:
-                      Styles.headLineStyle2.copyWith(color: Styles.textColor),
-                ),
-              ),
-              // ElevatedButton(
-              //   onPressed: handleFindCourtsButtonClick,
-              //   child: Text('Find Court'),
-              // ),
-            ],
-          ),
-
-          Column(
-            children: [
-              Container(
-                height: MediaQuery.of(context).size.height *
-                    0.7, // Set your desired height here
-                child: ListView(
-                  shrinkWrap: true,
-                  children: courtList
-                          .map((singleCourt) => CourtList(
-                                court: singleCourt,
-                                price: widget.facility['price'],
-                                duration: selectedDuration ?? "Default Value",
-                                selectedDate: selectedDate ?? "Default Value",
-                                selectedTime: selectedTime ?? "Default Value",
-                                selectedAMPM: selectedAMPM ?? "Default Value",
-                              ))
-                          .toList() ??
-                      [],
-                ),
-              ),
-              // Add other widgets below the ListView
-            ],
-          ),
-
-          MyCartButton(
-            onPressed: () {
-              // Add the action to be performed when the button is clicked
-              // For example, you can navigate to the cart screen.
-            },
-            label: "My Cart",
-          )
         ],
       ),
+
     );
 
     // Excluded from the padding of the ListView

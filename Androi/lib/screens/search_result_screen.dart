@@ -61,7 +61,7 @@ class SearchResultScreen extends StatelessWidget {
                   ),
                 ),
                 const Text(
-                  'Price per court',
+                  'Price per hour',
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -129,8 +129,7 @@ class SearchResultScreen extends StatelessWidget {
                                       .primaryColor, // Styles.primaryColor is assumed to be defined elsewhere
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: AssetImage(
-                                        "images/${badmintonFacility['image']}"),
+                                    image: NetworkImage(badmintonFacility['image']),
                                   ),
                                 ),
                               ),

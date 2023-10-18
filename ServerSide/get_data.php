@@ -5,7 +5,7 @@ header("Access-Control-Allow-Headers: Origin, Content-Type, Accept");
 
 include 'db_connect.php';
 
-$sql = "SELECT * FROM badmintonFacility";
+$sql = "SELECT * FROM facility";
 $result = $conn->query($sql);
 
 $data = array();

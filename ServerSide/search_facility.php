@@ -14,7 +14,7 @@ if (empty($searchQuery)) {
     // You can return an appropriate response or error message here
     exit; // Exit the script
 }
-$sql = "SELECT * FROM badmintonFacility WHERE name LIKE '%$searchQuery%' OR state LIKE '%$searchQuery%' OR district LIKE '%$searchQuery%'";
+$sql = "SELECT * FROM facility WHERE name LIKE '%$searchQuery%' OR state LIKE '%$searchQuery%' OR district LIKE '%$searchQuery%'";
 $result = $conn->query($sql);
 
 $data = array();

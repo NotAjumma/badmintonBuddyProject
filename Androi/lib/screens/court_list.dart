@@ -143,7 +143,7 @@ class _CourtListState extends State<CourtList> {
                         },
                         style: ElevatedButton.styleFrom(
                           primary: isAddedToCart ? Colors.white : Styles.secPrimaryColor,
-                          minimumSize: Size(double.infinity, 0),
+                          minimumSize: const Size(double.infinity, 0),
                           padding: EdgeInsets.symmetric(
                             vertical: AppLayout.getWidth(15),
                             horizontal: AppLayout.getWidth(15),
@@ -165,11 +165,13 @@ class _CourtListState extends State<CourtList> {
                     ),
                   ),
 
+
                 ],
               ),
             ),
 
           ],
+
         ),
 
       ),
