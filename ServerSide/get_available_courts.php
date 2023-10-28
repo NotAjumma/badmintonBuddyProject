@@ -13,26 +13,7 @@ $time = isset($_GET['time']) ? $_GET['time'] : '';
 $ampm = isset($_GET['ampm']) ? $_GET['ampm'] : '';
 $duration = isset($_GET['duration']) ? $_GET['duration'] : '';
 
-// Log the values for debugging
-// error_log("facilityId: $facilityId", 0);
-// error_log("date: $date", 0);
-// error_log("time: $time", 0);
-// error_log("ampm: $ampm", 0);
-// error_log("duration: $duration", 0);
 
-
-// $facilityId = 1;
-// $date = "2023-03-03";
-// $time = "11:00";
-// $ampm = "AM";
-// $duration = 1.5;
-
-// Check if any of the parameters are empty
-if (empty($facilityId) || empty($date) || empty($time) || empty($ampm) || empty($duration)) {
-    // Handle the case where input parameters are missing
-    // You can return an appropriate response or error message here
-    exit; // Exit the script
-}
 
 // Construct a datetime string from date, time, and AM/PM
 $datetime = "$date $time $ampm";
@@ -62,16 +43,18 @@ $sql = "SELECT c.courtID, c.name
                     AND '$ampm' = b.AmPm
                     AND (
                         (
-                            '$time' >= b.time
-                            AND '$time' < b.end_time
+                            STR_TO_DATE('$time', '%l:%i %p') >= STR_TO_DATE(b.time, '%l:%i %p')
+                            AND STR_TO_DATE('$time', '%l:%i %p') < STR_TO_DATE(b.end_time, '%l:%i %p')
                         )
                         OR (
-                            DATE_ADD('$time', INTERVAL $duration HOUR) > b.time
-                            AND DATE_ADD('$time', INTERVAL $duration HOUR) <= b.end_time
+                            STR_TO_DATE('$time', '%l:%i %p') < STR_TO_DATE(b.time, '%l:%i %p')
+                            AND DATE_ADD(STR_TO_DATE('$time', '%l:%i %p'), INTERVAL $duration HOUR) > STR_TO_DATE(b.time, '%l:%i %p')
                         )
                     )
                 )
             )";
+
+
 
 
 

@@ -3,7 +3,19 @@ import 'package:badmintonbuddy/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:badmintonbuddy/widgets/cart_items_notifier.dart';
-import 'package:provider/provider.dart'; // Import the file
+import 'package:provider/provider.dart';
+
+import 'auth_service.dart'; // Import the file
+// void main() {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   runApp(
+//     ChangeNotifierProvider(
+//       create: (context) => AuthService(), // Provide AuthService here
+//       child: MyApp(),
+//     ),
+//   );
+// }
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
@@ -13,6 +25,7 @@ void main() {
     ),
   );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

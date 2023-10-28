@@ -247,7 +247,7 @@ class _BookingCourtScreenState extends State<BookingCourtScreen> {
           'inside try null, Date, Time, Am, Duration: $selectedDate, $selectedTime, $selectedAMPM, $selectedDuration');
       final facilityId = widget.facility['id'];
       final url =
-          'http://192.168.137.1/BadmintonBuddyServerSide/get_available_courts.php?facility_id=$facilityId&date=$selectedDate&time=$selectedTime&ampm=$selectedAMPM&duration=$selectedDuration';
+          'http://192.168.0.11/BadmintonBuddyServerSide/get_available_courts.php?facility_id=$facilityId&date=$selectedDate&time=$selectedTime&ampm=$selectedAMPM&duration=$selectedDuration';
       final response = await http.get(Uri.parse(url));
 
       print('Response status code: ${response.statusCode}');

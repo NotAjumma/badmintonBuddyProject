@@ -10,6 +10,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
+import '../utils/app_api_list.dart';
+
 class CartDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> facility;
   final CartItemsNotifier cartItemsNotifier;
@@ -27,8 +29,7 @@ class CartDetailsScreen extends StatelessWidget {
 
   Future<void> sendBookingData(
       Map<String, dynamic> facility, List<CartItem> cartItems) async {
-    final url = Uri.parse(
-        'http://192.168.137.1/BadmintonBuddyServerSide/add_booking_court.php');
+    final url = (Uri.parse(APIs.addBookingCourtUrl));
 
     // Create JSON object for time, date, duration, ampm, and total
     final Map<String, dynamic> timeData = {
@@ -36,9 +37,9 @@ class CartDetailsScreen extends StatelessWidget {
       'date': cartItems[0].date,
       'duration': cartItems[0].duration,
       'ampm': cartItems[0].ampm,
-      'total': cartItems[0].price.toStringAsFixed(2),
-      'court_details':
-          <Map<String, dynamic>>[], // Initialize with an empty list
+      'total': calculateTotalPrice(cartItemsNotifier.cartItems).toStringAsFixed(2),
+      'endT': findEndTime(cartItems[0]),
+      'court_details': <Map<String, dynamic>>[], // Initialize with an empty list
     };
 
     for (int i = 0; i < cartItems.length; i++) {
@@ -64,18 +65,15 @@ class CartDetailsScreen extends StatelessWidget {
       // Add more fields as needed from the facility map
     };
     print('Request Data: $requestDataJson');
-
-    // final response = await http.post(url, body: body);
-
+    print('Request Body JSON: ${jsonEncode(body)}'); // Print the JSON-encoded body
 
     final response = await http.post(
       url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(requestDataJson),
+      body: jsonEncode(body),  // Send the entire 'body' map as JSON
     );
-
 
     if (response.statusCode == 200) {
       print('Data inserted successfully');
@@ -83,6 +81,44 @@ class CartDetailsScreen extends StatelessWidget {
     } else {
       print('Failed to insert data. Status code: ${response.statusCode}');
     }
+  }
+
+  String findEndTime(CartItem cartItem) {
+    String startTime =
+        cartItem.time; // Replace with the actual start time property
+    String durationStr =
+        cartItem.duration; // Replace with the actual duration property
+
+    // Parse the start time
+    List<String> parts = startTime.split(":");
+    int startHour = int.parse(parts[0]);
+    int startMinute = int.parse(parts[1]);
+
+    // Parse the duration as a double with error handling
+    double duration = 0.0;
+    try {
+      duration = double.parse(durationStr);
+    } catch (e) {
+      print('Error parsing duration: $e');
+      // Handle the error or provide a default value
+    }
+
+    // Calculate the end time
+    int durationHour = duration.toInt();
+    double durationMinutes = (duration - durationHour) * 60;
+    int endHour = startHour + durationHour;
+    int endMinute = (startMinute + durationMinutes).round();
+
+    if (endMinute >= 60) {
+      endHour += 1;
+      endMinute %= 60;
+    }
+
+    // Format the end time
+    String endTime =
+        '${endHour.toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
+
+    return endTime;
   }
 
   String formatDateString(String dateStr) {
@@ -128,11 +164,11 @@ class CartDetailsScreen extends StatelessWidget {
       endMinute %= 60;
     }
 
-    if (endHour >= 12) {
-      amPm = 'PM';
-    } else {
-      amPm = 'AM';
-    }
+    // if (endHour >= 12) {
+    //   amPm = 'PM';
+    // } else {
+    //   amPm = 'AM';
+    // }
 
     if (endHour > 12) {
       endHour -= 12;
