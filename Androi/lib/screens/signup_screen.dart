@@ -5,9 +5,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../utils/app_api_list.dart';
-import '../widgets/home_screen_with_bottom_bar.dart';
-
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -84,10 +81,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: IconButton(
                 icon: Icon(Icons.arrow_back_ios_new_rounded),
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomeScreenWithBottomBar()),
-                  );
+                  goBack(context);
                   // Handle custom back button press
                 },
               ),
@@ -230,7 +224,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
 
   Future<void> signUp() async {
-    final url = (Uri.parse(APIs.signupUrl));
+    final url = Uri.parse('http://192.168.0.6/BadmintonBuddyServerSide/register_account.php');
 
     final name = nameController.text;
     final mobileNumber = mobileNumberController.text;

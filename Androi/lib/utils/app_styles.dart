@@ -9,8 +9,6 @@ class Styles{
   static Color orangeColor = const Color(0xFFF37B67);
   static Color kakiColor = const Color(0xFFd1ca98);
   static TextStyle textStyle = TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.w500);
-  static TextStyle textStyleBold = TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.bold);
-
   static TextStyle headLineStyle1 = TextStyle(fontSize: 26, color: textColor, fontWeight: FontWeight.bold);
   static TextStyle headLineStyle2 = TextStyle(fontSize: 21, color: textColor, fontWeight: FontWeight.bold);
   static TextStyle headLineStyle23 = TextStyle(fontSize: 18, color: Colors.grey.shade500, fontWeight: FontWeight.bold);

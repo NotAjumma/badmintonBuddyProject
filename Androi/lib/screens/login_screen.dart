@@ -8,11 +8,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../auth_service.dart';
-import '../utils/app_api_list.dart';
-import '../widgets/home_screen_with_bottom_bar.dart';
 
 
 
@@ -46,10 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: IconButton(
                 icon: Icon(Icons.arrow_back_ios_new_rounded),
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomeScreenWithBottomBar()),
-                  );
+                    goBack(context);
                   // Handle custom back button press
                 },
               ),
@@ -90,7 +82,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          print(AuthService().isLoggedIn);
                           // Handle "Sign Up" text click
                           Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpScreen()));
                         },
@@ -144,90 +135,60 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
   Future<void> login() async {
-    // final url = Uri.parse(APIs.loginUrl);
-    //
+    final url = Uri.parse('http://192.168.0.6/BadmintonBuddyServerSide/login_account.php'); // Replace with your server URL
+
     final email = emailController.text;
     final password = passwordController.text;
-    // print('Email: $email');
-    // print('Password: $password');
-    //
-    // final requestBody = {
-    //   'email': email,
-    //   'password': password,
-    // };
-    //
-    // try {
-    //   final response = await http.post(url, body: requestBody);
-    //
-    //   print('Response: ${response.body}');
-    //
-    //   if (response.statusCode == 200) {
-    //     final data = json.decode(response.body);
-    //     print('Data: $data');
-    //
-    //     if (data['success']) {
-    //       final levelId = data['level_id'].toString(); // Ensure it's treated as a string
-    //       await saveUserLevelId(levelId);
-    //       // Set the user's login status to true
-    //       await saveUserLoginStatus(true);
-    //       // Call AuthService to log in
-    await AuthService().login(email, password, context);
+    print('Email: $email');
+    print('Password: $password');
 
-    //
-    //
-    //       if (levelId == "3") {
-    //         // Navigator.push(
-    //         //   context,
-    //         //   MaterialPageRoute(builder: (context) => HomeScreen()),
-    //         // );
-    //       } else if (levelId == "2") {
-    //         // Seller user
-    //         // Handle accordingly
-    //       } else if (levelId == "1") {
-    //         // Admin user
-    //         // Handle accordingly
-    //       }
-    //     } else {
-    //       final error = data['error'];
-    //       print('Login failed: $error');
-    //       ScaffoldMessenger.of(context).showSnackBar(
-    //         SnackBar(content: Text('Login failed: $error')),
-    //       );
-    //     }
-    //   } else {
-    //     print('Login failed2: ${response.statusCode}');
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(content: Text('Login failed2: ${response.statusCode}')),
-    //     );
-    //   }
-    // } catch (e) {
-    //   print('Login failed3: $e');
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text('Login failed3: $e')),
-    //   );
-    // }
+
+    final requestBody = {
+      'email': email,
+      'password': password,
+    };
+
+    try {
+      final response = await http.post(url, body: requestBody);
+
+      print('Response: ${response.body}'); // Add this line to print the server response
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        print('Data: $data');
+
+        if (data['success']) {
+          // Login successful
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        } else {
+          // Login failed
+          final error = data['error'];
+          print('Login failed: $error');
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Login failed: $error')),
+          );
+        }
+      } else {
+        // Handle non-200 status code
+        print('Login failed2: ${response.statusCode}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login failed2: ${response.statusCode}')),
+        );
+      }
+    } catch (e) {
+      // Handle network and other errors
+      print('Login failed3: $e');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login failed3: $e')),
+      );
+    }
   }
 
-
-  Future<void> saveUserLevelId(String levelId) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userLevelId', levelId);
-  }
-
-  Future<int> getUserLevelId() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt('userLevelId') ?? 0;
-  }
-
-  Future<void> saveUserLoginStatus(bool isLoggedIn) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', isLoggedIn);
-  }
-
-  Future<bool> getUserLoginStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('isLoggedIn') ?? false;
-  }
 }
 
 

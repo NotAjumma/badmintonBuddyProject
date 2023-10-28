@@ -3,18 +3,9 @@ import 'package:badmintonbuddy/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:badmintonbuddy/widgets/cart_items_notifier.dart';
-import 'package:provider/provider.dart';
-
-import 'auth_service.dart'; // Import the file
-// void main() {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   runApp(
-//     ChangeNotifierProvider(
-//       create: (context) => AuthService(), // Provide AuthService here
-//       child: MyApp(),
-//     ),
-//   );
-// }
+import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart'; // Import the file
+import 'package:flutter_qr_generator/flutter_qr_generator.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +16,6 @@ void main() {
     ),
   );
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -80,16 +70,26 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() {
+  void _incrementCounter() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final qrCodeImagePath = '${directory.path}/your_qr_code_image.png';
+
+      await FlutterQRGenerator.generateQRCode(
+        'Your QR Code Data',
+        200, // Size
+        qrCodeImagePath, // Specify the file path
+      );
+    } catch (e) {
+      print('Error generating QR code: $e');
+    }
+
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _counter++;
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {

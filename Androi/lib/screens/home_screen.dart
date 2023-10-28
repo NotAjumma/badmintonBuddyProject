@@ -14,8 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
-import '../utils/app_api_list.dart';
-
 final TextEditingController searchController = TextEditingController();
 
 class HomeScreen extends StatefulWidget {
@@ -56,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> fetchBadmintonFacilities() async {
     final response = await http.get(Uri.parse(
-        APIs.getDataFacilityUrl));
+        'http://192.168.0.6/BadmintonBuddyServerSide/get_data.php'));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = json.decode(response.body);
@@ -89,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     try {
       final response = await http.get(Uri.parse(
-          '${APIs.searchFacilityUrl}?query=${searchController.text}'));
+          'http://192.168.0.6/BadmintonBuddyServerSide/search_facility.php?query=${searchController.text}'));
 
       print('Response status code: ${response.statusCode}');
       print('Response body: ${response.body}');

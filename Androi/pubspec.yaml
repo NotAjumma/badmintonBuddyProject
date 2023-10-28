@@ -33,8 +33,9 @@ dependencies:
   http: ^0.13.3  # Add the http package and specify the version
   intl: ^0.17.0
   provider: ^6.0.5
-  shared_preferences:
-#  qr_image: ^1.0.0
+  qr_image: ^1.0.0
+  qr_flutter: ^4.1.0
+  path_provider: ^2.0.1
 
   # Add other Firebase dependencies as needed
 
@@ -49,6 +50,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_qr_generator:
+    path: ./flutter_qr_generator
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
