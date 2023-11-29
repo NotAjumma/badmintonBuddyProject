@@ -1,6 +1,15 @@
+import 'dart:developer';
+
+import 'package:badmintonbuddy/chats/screens/home_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../chats/api/apis.dart';
+import '../chats/screens/auth/login_screen.dart';
+import '../chats/screens/profile_screen.dart';
+import '../chats/screens/splash_screen.dart';
 import '../screens/booking_ticket_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/login_screen.dart';
@@ -19,23 +28,62 @@ class _HomeScreenWithBottomBarState extends State<HomeScreenWithBottomBar> {
   int _selectedIndex = 0; // Set the initial index to the Home tab
   bool isLoggedInNew = false;
 
+  void initState() {
+    super.initState();
+    APIs.getSelfInfo();
+
+    SystemChannels.lifecycle.setMessageHandler((message) {
+      log('Message: $message');
+
+      if (APIs.auth.currentUser != null) {
+        if (message.toString().contains('resume')) {
+          APIs.updateActiveStatus(true);
+        }
+        if (message.toString().contains('pause')) {
+          APIs.updateActiveStatus(false);
+        }
+      }
+
+      return Future.value(message);
+    });
+  }
+
   static final List<Widget> _widgetOptionsNotLogin = <Widget>[
     const HomeScreen(),
-    const LoginScreen(),
-    const SearchScreen(),
-    const LoginScreen(),
+    const LoginChatScreen(),
+    const LoginChatScreen(),
+    const LoginChatScreen(),
   ];
+
+  // static FirebaseAuth auth = FirebaseAuth.instance;
+  //
+  // static User get user => auth.currentUser!;
 
   static final List<Widget> _widgetOptionsLogin = <Widget>[
     const HomeScreen(),
     const BookingTicketScreen(),
-    const SearchScreen(),
-    const ProfileScreen(),
+    const ChatScreen(),
+    NewProfileScreen(user: APIs.me),
   ];
+
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+
+        // if (index == _widgetOptionsLogin.length - 1) {
+        //   // If the  last item (NewProfileScreen) is selected, navigate to it
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(builder: (_) => _widgetOptionsLogin[index]),
+        //   );
+        // } else {
+        //   // Handle other screen selections
+        //   // Set the selected index and update the UI accordingly
+        //   setState(() {
+        //     _selectedIndex = index;
+        //   });
+        // }
     });
   }
 

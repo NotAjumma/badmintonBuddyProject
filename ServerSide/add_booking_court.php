@@ -18,6 +18,7 @@ error_log("Decoded JSON Data: " . print_r($data, true));
         $requestData = json_decode($data['requestData'], true);
 
         // Extract the necessary values
+        $email = $requestData['username'];
         $time = $requestData['time'];
         $date = $requestData['date'];
         $duration = $requestData['duration'];
@@ -27,8 +28,8 @@ error_log("Decoded JSON Data: " . print_r($data, true));
 
 
         // Prepare an SQL statement for inserting the time data
-        $sql = "INSERT INTO booking (username, time, end_time, date, duration, AmPm, total) 
-                VALUES ('adha', '$time', '$endTime', '$date', '$duration', '$ampm', '$total')";
+        $sql = "INSERT INTO booking (email, time, end_time, date, duration, AmPm, total) 
+                VALUES ('$email', '$time', '$endTime', '$date', '$duration', '$ampm', '$total')";
 
         if ($conn->query($sql) === TRUE) {
             $bookingID = $conn->insert_id; // Get the last inserted bookingID

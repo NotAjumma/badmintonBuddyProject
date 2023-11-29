@@ -1,0 +1,1 @@
+ D:\\BadmintonBuddyV5\\.dart_tool\\flutter_build\\2c5a7f9727529ba222b0c39bdf08bf15\\native_assets.yaml: 

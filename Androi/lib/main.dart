@@ -1,14 +1,33 @@
+import 'dart:developer';
+
 import 'package:badmintonbuddy/screens/bottom_bar.dart';
 import 'package:badmintonbuddy/utils/app_styles.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_notification_channel/flutter_notification_channel.dart';
+import 'package:flutter_notification_channel/notification_importance.dart';
 import 'package:get/get.dart';
 import 'package:badmintonbuddy/widgets/cart_items_notifier.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:provider/provider.dart'; // Import the file
-import 'package:flutter_qr_generator/flutter_qr_generator.dart';
+import 'package:provider/provider.dart';
+
+import 'auth_service.dart';
+import 'firebase_options.dart'; // Import the file
+// void main() {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   runApp(
+//     ChangeNotifierProvider(
+//       create: (context) => AuthService(), // Provide AuthService here
+//       child: MyApp(),
+//     ),
+//   );
+// }
+late Size mq;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  _initializeFirebase();
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => CartItemsNotifier(), // Use CartItemsNotifier
@@ -16,6 +35,7 @@ void main() {
     ),
   );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -70,26 +90,16 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() async {
-    try {
-      final directory = await getApplicationDocumentsDirectory();
-      final qrCodeImagePath = '${directory.path}/your_qr_code_image.png';
-
-      await FlutterQRGenerator.generateQRCode(
-        'Your QR Code Data',
-        200, // Size
-        qrCodeImagePath, // Specify the file path
-      );
-    } catch (e) {
-      print('Error generating QR code: $e');
-    }
-
+  void _incrementCounter() {
     setState(() {
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
       _counter++;
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -145,4 +155,14 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+}
+  _initializeFirebase() async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  var result = await FlutterNotificationChannel.registerNotificationChannel(
+      description: 'For Showing Message Notification',
+      id: 'chats',
+      importance: NotificationImportance.IMPORTANCE_HIGH,
+      name: 'Chats');
+  log('\nNotification Channel Result: $result');
 }

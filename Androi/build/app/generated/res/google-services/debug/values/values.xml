@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gcm_defaultSenderId" translatable="false">933188029059</string>
+    <string name="google_api_key" translatable="false">AIzaSyDu7LJER68Ik0TcRmX-xjpWuBXi7qePJic</string>
+    <string name="google_app_id" translatable="false">1:933188029059:android:35aa770d5255575087a9b6</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDu7LJER68Ik0TcRmX-xjpWuBXi7qePJic</string>
+    <string name="google_storage_bucket" translatable="false">badbuddy-cb881.appspot.com</string>
+    <string name="project_id" translatable="false">badbuddy-cb881</string>
+</resources>

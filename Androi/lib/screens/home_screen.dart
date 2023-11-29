@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
+import '../utils/app_api_list.dart';
+
 final TextEditingController searchController = TextEditingController();
 
 class HomeScreen extends StatefulWidget {
@@ -54,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> fetchBadmintonFacilities() async {
     final response = await http.get(Uri.parse(
-        'http://192.168.0.6/BadmintonBuddyServerSide/get_data.php'));
+        APIsBook.getDataFacilityUrl));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = json.decode(response.body);
@@ -87,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     try {
       final response = await http.get(Uri.parse(
-          'http://192.168.0.6/BadmintonBuddyServerSide/search_facility.php?query=${searchController.text}'));
+          '${APIsBook.searchFacilityUrl}?query=${searchController.text}'));
 
       print('Response status code: ${response.statusCode}');
       print('Response body: ${response.body}');
@@ -122,11 +124,25 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  String greetUserByTime() {
+    final now = DateTime.now();
+    final currentTime = now.hour;
+
+    if (currentTime >= 5 && currentTime < 12) {
+      return "Good morning";
+    } else if (currentTime >= 12 && currentTime < 17) {
+      return "Good afternoon";
+    } else {
+      return "Good evening";
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Styles.bgColor,
-      body: Column(
+      body: ListView(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -140,9 +156,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Good morning",
+                          greetUserByTime(),
                           style: Styles.headLineStyle3,
                         ),
+
                         const Gap(5),
                         Text(
                           "Book Courts",
@@ -261,6 +278,32 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const Gap(15),
+          Container(
+            padding: EdgeInsets.symmetric(
+              vertical: AppLayout.getWidth(15),
+              horizontal: AppLayout.getWidth(15),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Famous Facility",
+                  style: Styles.headLineStyle2,
+                ),
+                InkWell(
+                  onTap: () {
+                    print("You are tapped");
+                  },
+                  child: Text(
+                    "View all",
+                    style: Styles.textStyle.copyWith(color: Styles.primaryColor),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+
           Expanded(
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,

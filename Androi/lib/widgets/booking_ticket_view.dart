@@ -1,3 +1,4 @@
+import 'package:badmintonbuddy/screens/booking_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -30,20 +31,109 @@ class BookingTicketView extends StatelessWidget {
     String formattedDate = DateFormat('dd MMM').format(bookingDate);
     return SizedBox(
       width: double.infinity,
-      height: 220,
+      // height: 290,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 10),
-        child: ListView(
+        margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
+
+
+
+        child: Column(
           children: [
             Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
+              decoration: BoxDecoration(
+                color: Styles.secPrimaryColor,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(21),
                   topRight: Radius.circular(21),
                 ),
               ),
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.only(
+                left: 16,
+                top: 16,
+                right: 16,
+                bottom: 16, // Set bottom padding to 0
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Text(
+                      //   formattedDate, // Display the formatted date
+                      //   style: Styles.headLineStyle3bold.copyWith(color: Styles.textColor),
+                      // ),
+                      Text(
+                        booking['facility']['facility_name'].toString(),
+                        style: Styles.headLineStyle3bold
+                            .copyWith(color: Colors.white),
+                      ),
+                      // Text(
+                      //   '${calculateTotalCourtsBooked(booking)} Court', // Display the total courts booked
+                      //   style: Styles.headLineStyle3bold.copyWith(color: Styles.textColor),
+                      // ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // SizedBox(
+                      //   width: 50,
+                      //   child: Text(
+                      //     'Date',
+                      //     style: Styles.headLineStyle4,
+                      //   ),
+                      // ),
+                      SizedBox(
+                        width: 150,
+                        child: Center(
+                          child: Text(
+                            truncateText(
+                              booking['facility']['district'].toString(),
+                              20, // Set the maximum length you desire
+                            ),
+                            style: Styles.headLineStyle4.copyWith(color: Colors.white70),
+                          ),
+                        ),
+                      ),
+                      // SizedBox(
+                      //   width: 50,
+                      //   child: Text(
+                      //     'Total',
+                      //     textAlign: TextAlign.end,
+                      //     style: Styles.headLineStyle4,
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            /*Container(
+              // Add a white background to the Divider
+              color: Color(0xFF526799),
+              child: CustomPaint(
+                painter: DashedLinePainter(
+                  color: Colors.white,
+                  strokeWidth: 1, // Adjust the line width as needed
+                  dashLength: 5, // Adjust the length of each dash
+                  dashSpacing: 2, // Adjust the spacing between dashes
+                ),
+              ),
+            ),*/
+            Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(0),
+                  topRight: Radius.circular(0),
+                ),
+              ),
+              padding: const EdgeInsets.only(
+                left: 16,
+                top: 16,
+                right: 16,
+                bottom: 16, // Set bottom padding to 0
+              ),
               child: Column(
                 children: [
                   Row(
@@ -51,26 +141,18 @@ class BookingTicketView extends StatelessWidget {
                     children: [
                       Text(
                         formattedDate, // Display the formatted date
-                        style: TextStyle(
-                          color: Styles.textColor,
-                          fontSize: 13,
-                        ),
+                        style: Styles.headLineStyle3bold
+                            .copyWith(color: Styles.textColor),
                       ),
-                      Text(
-                        booking['facility']['facility_name'].toString(),
-                        style: TextStyle(
-                          color: Styles.textColor,
-                          fontSize: 15,
-                        ),
-                      ),
+                      // Text(
+                      //   booking['facility']['facility_name'].toString(),
+                      //   style: Styles.headLineStyle3bold.copyWith(color: Styles.textColor),
+                      // ),
                       Text(
                         '${calculateTotalCourtsBooked(booking)} Court', // Display the total courts booked
-                        style: TextStyle(
-                          color: Styles.textColor,
-                          fontSize: 13,
-                        ),
+                        style: Styles.headLineStyle3bold
+                            .copyWith(color: Styles.textColor),
                       ),
-
                     ],
                   ),
                   Row(
@@ -80,42 +162,44 @@ class BookingTicketView extends StatelessWidget {
                         width: 50,
                         child: Text(
                           'Date',
-                          style: TextStyle(
-                            color: Styles.textColor,
-                            fontSize: 14,
-                          ),
+                          style: Styles.headLineStyle4,
                         ),
                       ),
-                      SizedBox(
-                        width: 150,
-                        child: Center(
-                          child: Text(
-                            truncateText(
-                              booking['facility']['district'].toString(),
-                              20, // Set the maximum length you desire
-                            ),
-                            style: TextStyle(
-                              color: Styles.textColor,
-                              fontSize: 15,
-                            ),
-                          ),
-                        ),
-                      ),
+                      // SizedBox(
+                      //   width: 150,
+                      //   child: Center(
+                      //     child: Text(
+                      //       truncateText(
+                      //         booking['facility']['district'].toString(),
+                      //         20, // Set the maximum length you desire
+                      //       ),
+                      //       style: Styles.headLineStyle4,
+                      //     ),
+                      //   ),
+                      // ),
                       SizedBox(
                         width: 50,
                         child: Text(
                           'Total',
                           textAlign: TextAlign.end,
-                          style: TextStyle(
-                            color: Styles.textColor,
-                            fontSize: 14,
-                          ),
+                          style: Styles.headLineStyle4,
                         ),
                       ),
                     ],
-
                   ),
                 ],
+              ),
+            ),
+            Container(
+              // Add a white background to the Divider
+              color: Colors.white,
+              child: CustomPaint(
+                painter: DashedLinePainter(
+                  color: Styles.boxGrey,
+                  strokeWidth: 1, // Adjust the line width as needed
+                  dashLength: 5, // Adjust the length of each dash
+                  dashSpacing: 2, // Adjust the spacing between dashes
+                ),
               ),
             ),
             Container(
@@ -126,7 +210,12 @@ class BookingTicketView extends StatelessWidget {
                   bottomRight: Radius.circular(0),
                 ),
               ),
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.only(
+                left: 16,
+                top: 16,
+                right: 16,
+                bottom: 16, // Set bottom padding to 0
+              ),
               child: Column(
                 children: [
                   Row(
@@ -136,38 +225,28 @@ class BookingTicketView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            booking['time'].toString(),
-                            style: TextStyle(
-                              color: Styles.textColor,
-                              fontSize: 14,
-                            ),
+                            "${booking['time']} ${(booking['AmPm'])}",
+                            style: Styles.headLineStyle3bold
+                                .copyWith(color: Styles.textColor),
                           ),
                           Text(
                             "Start",
-                            style: TextStyle(
-                              color: Styles.textColor,
-                              fontSize: 14,
-                            ),
+                            style: Styles.headLineStyle4,
                           ),
                         ],
                       ),
                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            booking['duration'].toString() + ' hours', // Add ' hours' after the duration
-                            style: TextStyle(
-                              color: Styles.textColor,
-                              fontSize: 14,
-                            ),
+                            booking['duration'].toString() +
+                                ' hours', // Add ' hours' after the duration
+                            style: Styles.headLineStyle3bold
+                                .copyWith(color: Styles.textColor),
                           ),
-
                           Text(
-                            "",
-                            style: TextStyle(
-                              color: Styles.textColor,
-                              fontSize: 14,
-                            ),
+                            "Duration",
+                            style: Styles.headLineStyle4,
                           ),
                         ],
                       ),
@@ -175,18 +254,13 @@ class BookingTicketView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            booking['end_time'].toString(),
-                            style: TextStyle(
-                              color: Styles.textColor,
-                              fontSize: 14,
-                            ),
+                            "${booking['end_time']} ${(booking['AmPm'])}",
+                            style: Styles.headLineStyle3bold
+                                .copyWith(color: Styles.textColor),
                           ),
                           Text(
                             "End",
-                            style: TextStyle(
-                              color: Styles.textColor,
-                              fontSize: 14,
-                            ),
+                            style: Styles.headLineStyle4,
                           ),
                         ],
                       ),
@@ -244,6 +318,9 @@ class BookingTicketView extends StatelessWidget {
                           padding: const EdgeInsets.all(10),
                           child: InkWell(
                             onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) => BookingDetailsScreen(booking: booking)),
+                              );
                               // Handle the "View" button click, e.g., navigate to another screen
                             },
                             child: Container(

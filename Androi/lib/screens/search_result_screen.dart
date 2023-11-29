@@ -8,6 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 
+import '../session_manager.dart';
+import 'login_screen.dart';
+import 'login_screen_book.dart';
+
 // SearchResultScreen
 class SearchResultScreen extends StatelessWidget {
   final List<Map<String, dynamic>> searchResults;
@@ -27,22 +31,48 @@ class SearchResultScreen extends StatelessWidget {
     Navigator.pop(context); // Use Navigator.pop to go back to the previous screen
   }
 
+  Future<bool> checkLoginStatus() async {
+    print('inside checkLoginStatus');
+    String? username = await SessionManager.getUsername();
+    if (username != null) {
+      print("Username: $username");
+      return true; // User is logged in
+    } else {
+      print("Username not found.");
+      return false; // User is not logged in
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = AppLayout.getSize(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Styles.secPrimaryColor,
-        title: Text(
-          "Select a Badminton Facility",
-          style: Styles.headLineStyle2.copyWith(color: Colors.white),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded),
-          color: (Colors.white),
-          onPressed: () {
-            goBack(context);
-          },
+        elevation: 0.0,
+        iconTheme: IconThemeData(color: Colors.white),
+        automaticallyImplyLeading: false, // Remove the default back button
+        title: Row(
+          children: [
+            Container(
+              child: IconButton(
+                icon: Icon(Icons.arrow_back_ios_new_rounded),
+                onPressed: () {
+                  goBack(context);
+                  // Handle custom back button press
+                },
+              ),
+            ),
+            Expanded(
+              child: Center(
+                child: Text(
+                  "Select a Badminton Facility",
+                  style: Styles.headLineStyle23.copyWith(color: Colors.white),
+                ),
+              ),
+            ),
+            Container(width: 48), // Adjust the width to your preference
+          ],
         ),
       ),
       backgroundColor: Styles.bgColor,
@@ -111,7 +141,7 @@ class SearchResultScreen extends StatelessWidget {
                         Container(
 
                           width: size.width,
-                          height: AppLayout.getHeight(350),
+                          // height: AppLayout.getHeight(350),
                           padding: EdgeInsets.symmetric(
                               horizontal: AppLayout.getWidth(15),
                               vertical: AppLayout.getWidth(17)),
@@ -208,36 +238,53 @@ class SearchResultScreen extends StatelessWidget {
                                           10)), // Spacing between buttons
                                   Expanded(
                                     child: Container(
-                                      height: 50, // Fixed height
+                                      height: 50,
                                       child: ElevatedButton(
-                                        onPressed: () {
-                                          // Navigate to the Court List screen
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => BookingCourtScreen(
-                                                facility:
-                                                badmintonFacility,), // Assuming you have a CourtList screen
-                                            ),
-                                          );
+                                        onPressed: () async {
+                                          // Check the login status
+                                          bool isLoggedIn = await checkLoginStatus();
+
+                                          // Navigate based on the login status
+                                          if (isLoggedIn) {
+                                            // User is logged in, navigate to the Court List screen
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => BookingCourtScreen(
+                                                  facility: badmintonFacility,
+                                                ),
+                                              ),
+                                            );
+                                          } else {
+                                            // User is not logged in, navigate to the Login screen
+                                            // Facility selectedFacility = badmintonFacility; // Pass the selected facility
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => LoginScreenBook(
+                                                  facility: badmintonFacility,
+                                                ),
+
+                                              ),
+                                            );
+                                            print('LoginScreenBook');
+                                          }
                                         },
                                         style: ElevatedButton.styleFrom(
-                                          primary: Styles
-                                              .secPrimaryColor, // Background color for "Book Now"
+                                          primary: Styles.secPrimaryColor,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                AppLayout.getWidth(10)),
+                                            borderRadius: BorderRadius.circular(AppLayout.getWidth(10)),
                                           ),
                                         ),
                                         child: Text(
                                           "Book Now",
-                                          style: Styles.headLineStyle3.copyWith(
-                                              color: Colors
-                                                  .white), // Text style for "Book Now"
+                                          style: Styles.headLineStyle3.copyWith(color: Colors.white),
                                         ),
                                       ),
                                     ),
                                   ),
+
+
                                 ],
                               )
 

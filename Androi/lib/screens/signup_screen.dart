@@ -1,9 +1,15 @@
+import 'dart:math';
+
 import 'package:badmintonbuddy/screens/home_screen.dart';
 import 'package:badmintonbuddy/screens/login_screen.dart';
 import 'package:badmintonbuddy/utils/app_styles.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../chats/api/apis.dart';
+import '../utils/app_api_list.dart';
+import '../widgets/home_screen_with_bottom_bar.dart';
 
 
 class SignUpScreen extends StatefulWidget {
@@ -81,7 +87,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: IconButton(
                 icon: Icon(Icons.arrow_back_ios_new_rounded),
                 onPressed: () {
-                  goBack(context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreenWithBottomBar()),
+                  );
                   // Handle custom back button press
                 },
               ),
@@ -102,120 +111,124 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
 
 
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              "Welcome back",
-              style: Styles.headLineStyle1.copyWith(color: Styles.textColor),
-            ),
-            SizedBox(height: 5),
-            GestureDetector(
-              child: RichText(
-                text: TextSpan(
-                  text: "Already have a BadmintonBuddy account? ",
-                  style: Styles.headLineStyle4.copyWith(color: Styles.textColor),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: "Log In.",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          // Handle "Sign Up" text click
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
-                        },
+      body: ListView(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  "Sign Up",
+                  style: Styles.headLineStyle1.copyWith(color: Styles.textColor),
+                ),
+                SizedBox(height: 5),
+                GestureDetector(
+                  child: RichText(
+                    text: TextSpan(
+                      text: "Already have a BadmintonBuddy account? ",
+                      style: Styles.headLineStyle4.copyWith(color: Styles.textColor),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: "Log In.",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              // Handle "Sign Up" text click
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => LoginScreen()),
+                              );
+                            },
+                        ),
+                      ],
                     ),
-                  ],
-
+                  ),
                 ),
-              ),
-            ),
-            SizedBox(height: 40),
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(
-                labelText: "Name",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            if (nameError.isNotEmpty)
-              Text(
-                nameError,
-                style: TextStyle(color: Colors.red),
-              ),
-            SizedBox(height: 16),
-            TextField(
-              controller: mobileNumberController,
-              decoration: InputDecoration(
-                labelText: "Mobile Number",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            if (mobileNumberError.isNotEmpty)
-              Text(
-                mobileNumberError,
-                style: TextStyle(color: Colors.red),
-              ),
-            SizedBox(height: 16),
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(
-                labelText: "Email",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            if (emailError.isNotEmpty)
-              Text(
-                emailError,
-                style: TextStyle(color: Colors.red),
-              ),
-            SizedBox(height: 16),
-            TextField(
-              controller: passwordController,
-              obscureText: _obscurePassword,
-              decoration: InputDecoration(
-                labelText: "Password",
-                border: OutlineInputBorder(),
-                suffixIcon: IconButton(
+                SizedBox(height: 40),
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    labelText: "Name",
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                if (nameError.isNotEmpty)
+                  Text(
+                    nameError,
+                    style: TextStyle(color: Colors.red),
+                  ),
+                SizedBox(height: 16),
+                TextField(
+                  controller: mobileNumberController,
+                  decoration: InputDecoration(
+                    labelText: "Mobile Number",
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                if (mobileNumberError.isNotEmpty)
+                  Text(
+                    mobileNumberError,
+                    style: TextStyle(color: Colors.red),
+                  ),
+                SizedBox(height: 16),
+                TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    labelText: "Email",
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                if (emailError.isNotEmpty)
+                  Text(
+                    emailError,
+                    style: TextStyle(color: Colors.red),
+                  ),
+                SizedBox(height: 16),
+                TextField(
+                  controller: passwordController,
+                  obscureText: _obscurePassword,
+                  decoration: InputDecoration(
+                    labelText: "Password",
+                    border: OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
+                      icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+                    ),
+                  ),
+                ),
+                if (passwordError.isNotEmpty)
+                  Text(
+                    passwordError,
+                    style: TextStyle(color: Colors.red),
+                  ),
+                SizedBox(height: 16),
+                ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      _obscurePassword = !_obscurePassword;
-                    });
+                    signUp(); // Call the function to send the HTTP request
                   },
-                  icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.all(20),
+                    primary: Styles.secPrimaryColor,
+                  ),
+                  child: Text(
+                    "Sign Up",
+                    style: Styles.textStyle.copyWith(color: Colors.white),
+                  ),
                 ),
-              ),
+              ],
             ),
-            if (passwordError.isNotEmpty)
-              Text(
-                passwordError,
-                style: TextStyle(color: Colors.red),
-              ),
-
-
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                signUp(); // Call the function to send the HTTP request
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.all(20),
-                primary: Styles.secPrimaryColor,
-              ),
-              child: Text(
-                "Sign Up",
-                style: Styles.textStyle.copyWith(color: Colors.white),
-              ),
-            ),
-
-          ],
-        ),
+          ),
+        ],
       ),
+
     );
   }
   // bool isNameEmpty(String name) {
@@ -224,7 +237,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
 
   Future<void> signUp() async {
-    final url = Uri.parse('http://192.168.0.6/BadmintonBuddyServerSide/register_account.php');
+    final url = (Uri.parse(APIsBook.signupUrl));
 
     final name = nameController.text;
     final mobileNumber = mobileNumberController.text;
@@ -276,6 +289,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     print('POST Body: $requestBody');
 
     final response = await http.post(url, body: requestBody);
+    // Generate a custom UID (replace this with your preferred method)
+    final customUid = generateCustomUid();
+    await APIs.createUserFromManual(email, name, customUid);
 
     if (response.statusCode == 200) {
       print('Sign up successful!');
@@ -286,5 +302,55 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } else {
       print('Sign up failed. Error code: ${response.statusCode}');
     }
+
+    // After successfully registering the user manually, proceed with Firebase registration
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+          email: email, password: password);
+
+      // // Retrieve the Firebase UID
+      // String firebaseUid = userCredential.user?.uid ?? '';
+      //
+      // // Store the Firebase UID in your MySQL database (you might need an API endpoint for this)
+      // await linkFirebaseUidWithManualUser(email, firebaseUid);
+      //
+      // Now, you can create the user in your Firestore collection
+      await APIs.createUser();
+
+      // Navigate to the home screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
+    } catch (e) {
+      print('Firebase registration failed. Error: $e');
+      // Handle Firebase registration failure
+    }
   }
+  // Function to generate a custom UID (replace this with your preferred method)
+  String generateCustomUid() {
+    // Use a combination of current timestamp and a random number for simplicity
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final random = Random().nextInt(999999); // Adjust as needed
+
+    return '$timestamp$random';
+  }
+
+
+  // // Function to link Firebase UID with manual user in MySQL
+  // Future<void> linkFirebaseUidWithManualUser(String email, String firebaseUid) async {
+  //   // Make an API call to your server to store the association
+  //   final url = Uri.parse(APIsBook.linkFirebaseUidUrl);
+  //   final requestBody = {'email': email, 'firebaseUid': firebaseUid};
+  //
+  //   final response = await http.post(url, body: requestBody);
+  //
+  //   if (response.statusCode == 200) {
+  //     print('Firebase UID linked successfully');
+  //   } else {
+  //     print('Failed to link Firebase UID. Error code: ${response.statusCode}');
+  //     // Handle failure to link Firebase UID
+  //   }
+  // }
 }

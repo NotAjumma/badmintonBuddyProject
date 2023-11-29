@@ -1,27 +1,44 @@
 {
   "project_info": {
-    "project_number": "897126403827",
-    "firebase_url": "https://badmintonbuddy-bd5ca-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "badmintonbuddy-bd5ca",
-    "storage_bucket": "badmintonbuddy-bd5ca.appspot.com"
+    "project_number": "933188029059",
+    "project_id": "badbuddy-cb881",
+    "storage_bucket": "badbuddy-cb881.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:897126403827:android:718fe6974f7052d508f186",
+        "mobilesdk_app_id": "1:933188029059:android:35aa770d5255575087a9b6",
         "android_client_info": {
-          "package_name": "com.example.testingdb"
+          "package_name": "com.example.badmintonbuddy"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "933188029059-kp9982en1fudk18n8dq14604f2o3baje.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.badmintonbuddy",
+            "certificate_hash": "f580657ed8b7be2ebeec022483baf89f01ba0ce7"
+          }
+        },
+        {
+          "client_id": "933188029059-efu23dtmjjss2i1h76jf5omqtplno042.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDjSzGENbgsP3b7IN30RFpMdwC_iInbMfU"
+          "current_key": "AIzaSyDu7LJER68Ik0TcRmX-xjpWuBXi7qePJic"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "933188029059-efu23dtmjjss2i1h76jf5omqtplno042.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

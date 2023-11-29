@@ -10,6 +10,9 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
+import '../session_manager.dart';
+import '../utils/app_api_list.dart';
+
 class CartDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> facility;
   final CartItemsNotifier cartItemsNotifier;
@@ -25,13 +28,15 @@ class CartDetailsScreen extends StatelessWidget {
         context); // Use Navigator.pop to go back to the previous screen
   }
 
+
+
   Future<void> sendBookingData(
       Map<String, dynamic> facility, List<CartItem> cartItems) async {
-    final url = Uri.parse(
-        'http://192.168.0.18/BadmintonBuddyServerSide/add_booking_court.php');
-
+    final url = (Uri.parse(APIsBook.addBookingCourtUrl));
+    String? username = await SessionManager.getUsername();
     // Create JSON object for time, date, duration, ampm, and total
     final Map<String, dynamic> timeData = {
+      'username': username,
       'time': cartItems[0].time,
       'date': cartItems[0].date,
       'duration': cartItems[0].duration,
