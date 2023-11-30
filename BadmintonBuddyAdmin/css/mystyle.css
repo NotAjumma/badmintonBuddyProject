@@ -1,0 +1,172 @@
+body {
+  font-family: "Rubik", sans-serif;
+}
+
+/* Additional styling for specific elements if needed */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Rubik", sans-serif;
+}
+
+/* Example of applying Rubik font to a specific class */
+.my-custom-font {
+  font-family: "Rubik", sans-serif;
+}
+
+.banner-bold-text {
+  font-size: 3.8rem;
+  font-weight: 600;
+  line-height: 58px;
+  font-family: "Rubik", sans-serif;
+}
+
+.extralarge-bold-text {
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 48px;
+  font-family: "Rubik", sans-serif;
+}
+
+.large-text {
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 48px;
+  font-family: "Rubik", sans-serif;
+}
+
+.large-extrabold-text {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 48px;
+  font-family: "Rubik", sans-serif;
+}
+
+.large-bold-text {
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 48px;
+  font-family: "Rubik", sans-serif;
+}
+
+.large-regular-text {
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 35px;
+  font-family: "Rubik", sans-serif;
+}
+.large-medium-text {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 48px;
+  font-family: "Rubik", sans-serif;
+}
+
+.medium-text {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 38px;
+  font-family: "Rubik", sans-serif;
+}
+
+.karla-medium-text {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 38px;
+  font-family: "Karla", sans-serif;
+}
+
+.regular-medium-text {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 38px;
+  font-family: "Rubik", sans-serif;
+}
+
+.regular-small-text {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 25px;
+  font-family: "Rubik", sans-serif;
+}
+
+.karla-regular-small-text {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  font-family: "Karla", sans-serif;
+}
+
+.karla-regular-blod-small-text {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  font-family: "Karla", sans-serif;
+}
+
+.small-double-extrabold-text {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 28px;
+  font-family: "Karla", sans-serif;
+}
+
+.small-extrabold-text {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 28px;
+  font-family: "Karla", sans-serif;
+}
+
+.button-bold-text {
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 20px;
+  font-family: "Karla", sans-serif;
+}
+
+.button-text {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  font-family: "Karla", sans-serif;
+}
+
+.karla-small-medium-text {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 28px;
+  font-family: "Karla", sans-serif;
+}
+
+.small-text {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 20px;
+  font-family: "Karla", sans-serif;
+}
+
+.small-bold-text {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 18px;
+  font-family: "Karla", sans-serif;
+}
+
+.extrasmall-bold-text {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 15px;
+  font-family: "Karla", sans-serif;
+}
+
+.error-input-text {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 0px;
+  font-family: "Karla", sans-serif;
+  color: #ff0000;
+}
